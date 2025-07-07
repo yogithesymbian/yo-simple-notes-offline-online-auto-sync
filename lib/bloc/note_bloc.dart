@@ -17,6 +17,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   NoteBloc(this.noteService, this.connectivity) : super(NoteInitial()) {
     on<LoadNotes>(_onLoadNotes);
     on<AddNote>(_onAddNote);
+    on<DeleteNote>(_onDeleteNote);
     on<SyncNotes>(_onSyncNotes);
     on<MarkNoteDone>(_onMarkNoteDone);
 
@@ -44,6 +45,14 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
 
   Future<void> _onAddNote(AddNote event, Emitter<NoteState> emit) async {
     await noteService.saveNoteOffline(event.note);
+    add(LoadNotes());
+    if ((await connectivity.checkConnectivity()) != ConnectivityResult.none) {
+      add(SyncNotes());
+    }
+  }
+
+  Future<void> _onDeleteNote(DeleteNote event, Emitter<NoteState> emit) async {
+    await noteService.deleteNote(event.note);
     add(LoadNotes());
     if ((await connectivity.checkConnectivity()) != ConnectivityResult.none) {
       add(SyncNotes());

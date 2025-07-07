@@ -48,6 +48,15 @@ class NoteService {
     );
   }
 
+  Future<void> deleteNote(Note note) async {
+    final database = await db;
+    await database.delete(
+      'notes',
+      where: 'id = ?',
+      whereArgs: [note.id],
+    );
+  }
+
   Future<List<Note>> getLocalNotes() async {
     final database = await db;
     final List<Map<String, dynamic>> maps = await database.query('notes');
@@ -69,7 +78,7 @@ class NoteService {
             'Content-Type': 'application/json',
             // TODO just test replace with your actual JWT token
             'Authorization':
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE5NTgzMDUsInVzZXJfaWQiOjV9.WDKIwg2ydjl-bYLb9inGnhsB2eeNHIBWfmGeS3Q9RbM',
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTIxMjY5ODMsInVzZXJfaWQiOjV9.22_l3t1lCIKEpSryTdrqLtNFXVVRFQJE0SOstlgNRJs',
           },
           body: jsonEncode({
             'title': note.title,
@@ -103,7 +112,7 @@ class NoteService {
         'Content-Type': 'application/json',
         // TODO just test replace with your actual JWT token
         'Authorization':
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE5NTgzMDUsInVzZXJfaWQiOjV9.WDKIwg2ydjl-bYLb9inGnhsB2eeNHIBWfmGeS3Q9RbM',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTIxMjY5ODMsInVzZXJfaWQiOjV9.22_l3t1lCIKEpSryTdrqLtNFXVVRFQJE0SOstlgNRJs',
       },
     );
 

@@ -1,16 +1,135 @@
-# flutter_offline_online
+# Flutter Notes Sync (Offline/Online with BLoC)
 
-A new Flutter project.
+This Flutter project demonstrates a **note-taking app** with **offline-first** support using:
 
-## Getting Started
+- `flutter_bloc` for state management
+- `sqflite` for local storage
+- REST API (built with Golang + JWT) for remote syncing
+- `flutter_offline` for detecting network connectivity
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 🚀 Getting Started
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 1. Clone the Flutter project
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git clone <your-repo-url>
+cd flutter_notes_sync_bloc
+```
+
+### 2. Install Flutter packages
+
+```bash
+flutter pub get
+```
+
+### 3. Run the app
+
+```bash
+flutter run
+```
+
+Make sure to have your emulator/device running.
+
+---
+
+## 🔐 Authentication
+
+To obtain an access token, make a POST request to the login endpoint:
+
+```bash
+curl  -X POST \
+  'https://yo-simple-notes-railways-production.up.railway.app/login' \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "username": "admin",
+    "password": "admin123"
+}'
+```
+
+Response will contain a JWT token. **Replace this token** in:
+
+```dart
+// lib/services/note_service.dart
+headers: {
+  'Content-Type': 'application/json',
+  'Authorization': '<PUT_YOUR_JWT_TOKEN_HERE>'
+},
+```
+
+```dart
+// lib/services/note_service.dart
+http://192.168.43.5:8080
+replace all with:
+https://yo-simple-notes-railways-production.up.railway.app
+```
+
+---
+
+## ✨ Features
+
+- ✅ Add, update, delete notes
+- ✅ Mark notes as done/undone
+- ✅ Save notes locally using SQLite (offline-first)
+- ✅ Sync to remote server (if online)
+- ✅ Auto-sync when internet comes back online
+- ✅ Manual "Sync Now" button
+
+---
+
+## 🛠️ Folder Structure
+
+```
+lib/
+├── bloc/             # BLoC state management
+├── models/           # Note model
+├── services/         # NoteService (SQLite + API)
+├── pages/            # UI screens (HomePage)
+```
+
+---
+
+## 🧠 Backend (Golang)
+
+- The backend is built with Golang, uses MySQL, and supports JWT auth
+- Endpoints:
+
+  - `POST /login`
+  - `GET /notes`
+  - `POST /notes`
+  - `PATCH /notes/:id`
+  - `DELETE /notes/:id`
+
+---
+
+## 📦 Dependencies
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.6
+  flutter_offline: ^3.0.1
+  sqflite: ^2.3.2
+  path_provider: ^2.1.1
+  http: ^0.13.6
+```
+
+---
+
+## 📣 Notes
+
+- Make sure the backend server is **accessible** from your emulator/device
+- If you're testing on a physical Android device, use IP (e.g. `192.168.x.x`) instead of `localhost`
+- Database persistence will survive hot restart, but **not full rebuild** if you're using in-memory DB
+
+---
+
+## 📌 Coming Soon
+
+- [ ] Form to add/edit notes
+- [ ] Undo delete
+- [ ] Search and filter notes
+
+Happy coding! 🚀

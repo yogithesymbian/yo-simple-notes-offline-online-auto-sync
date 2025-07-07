@@ -96,9 +96,23 @@ class HomePage extends StatelessWidget {
                               context.read<NoteBloc>().add(MarkNoteDone(note));
                             },
                           ),
-                          trailing: note.synced
-                              ? const Icon(Icons.cloud_done)
-                              : const Icon(Icons.cloud_off),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              note.synced
+                                  ? const Icon(Icons.cloud_done)
+                                  : const Icon(Icons.cloud_off),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () => context
+                                    .read<NoteBloc>()
+                                    .add(DeleteNote(note)),
+                              ),
+                            ],
+                          ),
+                          // trailing: note.synced
+                          //     ? const Icon(Icons.cloud_done)
+                          //     : const Icon(Icons.cloud_off),
                         );
                       },
                     );
