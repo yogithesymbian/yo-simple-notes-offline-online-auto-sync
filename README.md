@@ -14,7 +14,7 @@ This Flutter project demonstrates a **note-taking app** with **offline-first** s
 ### 1. Clone the Flutter project
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/yogithesymbian/yo-simple-notes-offline-online-auto-sync.git
 cd flutter_notes_sync_bloc
 ```
 
