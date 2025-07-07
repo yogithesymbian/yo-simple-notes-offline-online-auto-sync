@@ -33,6 +33,11 @@ class NoteService {
     );
   }
 
+  Future<void> clearLocalNotes() async {
+    final database = await db;
+    await database.delete('notes');
+  }
+
   Future<void> saveNoteOffline(Note note) async {
     final database = await db;
     await database.insert('notes', note.toJson());
@@ -88,6 +93,7 @@ class NoteService {
         );
 
         if (response.statusCode == 200 || response.statusCode == 201) {
+          print("✅ Success to sync note ID ${note.id}: ${response.statusCode}");
           await database.update(
             'notes',
             {'synced': 1},
@@ -106,6 +112,8 @@ class NoteService {
   }
 
   Future<void> fetchFromServer() async {
+    final database = await db;
+
     final response = await http.get(
       Uri.parse('http://192.168.43.5:8080/notes'),
       headers: {
@@ -117,20 +125,44 @@ class NoteService {
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> remoteNotes = jsonDecode(response.body);
-      final dbClient = await db;
+      final List<dynamic> data = jsonDecode(response.body);
+      for (var item in data) {
+        final note = Note.fromJson(item);
 
-      for (final json in remoteNotes) {
-        final note = Note.fromJson(json);
-        await dbClient.insert(
+        // Check if the note already exists in local DB
+        final existing = await database.query(
           'notes',
-          note.toJson(),
-          conflictAlgorithm: ConflictAlgorithm.replace,
+          where: 'id = ?',
+          whereArgs: [note.id],
         );
+
+        if (existing.isEmpty) {
+          await database.insert('notes', {
+            'id': note.id, // Use server ID to match future updates
+            'title': note.title,
+            'content': note.content,
+            'mark_done': note.markDone ? 1 : 0,
+            'synced': 1,
+          });
+        } else {
+          // Optional: update if content changes
+          await database.update(
+            'notes',
+            {
+              'title': note.title,
+              'content': note.content,
+              'mark_done': note.markDone ? 1 : 0,
+              'synced': 1,
+            },
+            where: 'id = ?',
+            whereArgs: [note.id],
+          );
+        }
       }
     } else {
       print("❌ Failed to fetch notes: ${response.statusCode}");
       print("Body: ${response.body}");
+      throw Exception('Failed to fetch notes');
     }
   }
 }

@@ -9,6 +9,8 @@ abstract class NoteEvent extends Equatable {
 
 class LoadNotes extends NoteEvent {}
 
+class ClearAllNotes extends NoteEvent {}
+
 class AddNote extends NoteEvent {
   final Note note;
   const AddNote(this.note);
