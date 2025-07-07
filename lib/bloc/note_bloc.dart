@@ -12,22 +12,32 @@ part 'note_state.dart';
 class NoteBloc extends Bloc<NoteEvent, NoteState> {
   final NoteService noteService;
   final Connectivity connectivity;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
   NoteBloc(this.noteService, this.connectivity) : super(NoteInitial()) {
     on<LoadNotes>(_onLoadNotes);
     on<AddNote>(_onAddNote);
     on<SyncNotes>(_onSyncNotes);
     on<MarkNoteDone>(_onMarkNoteDone);
-  }
 
+    // Listen to connectivity changes to auto-sync
+    _connectivitySubscription =
+        connectivity.onConnectivityChanged.listen((result) {
+      if (result != ConnectivityResult.none) {
+        add(SyncNotes());
+      }
+    });
+  }
   Future<void> _onLoadNotes(LoadNotes event, Emitter<NoteState> emit) async {
     emit(NoteLoading());
     try {
+      if ((await connectivity.checkConnectivity()) != ConnectivityResult.none) {
+        await noteService.fetchFromServer();
+      }
       final localNotes = await noteService.getLocalNotes();
       emit(NoteLoaded(localNotes));
-    } catch (e, stacktrace) {
-      print("LOAD NOTE ERROR: $e");
-      print(stacktrace);
+    } catch (e, st) {
+      print("LOAD NOTE ERROR: $e\n$st");
       emit(const NoteError("Failed to load notes"));
     }
   }
@@ -56,5 +66,11 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     } catch (_) {
       // silently ignore errors when syncing
     }
+  }
+
+  @override
+  Future<void> close() {
+    _connectivitySubscription?.cancel();
+    return super.close();
   }
 }

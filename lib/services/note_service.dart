@@ -64,10 +64,10 @@ class NoteService {
 
       try {
         final response = await http.post(
-          Uri.parse('http://localhost:8080/notes'),
+          Uri.parse('http://192.168.43.5:8080/notes'),
           headers: {
             'Content-Type': 'application/json',
-            // ✔️ pakai Bearer: Bearer
+            // TODO just test replace with your actual JWT token
             'Authorization':
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE5NTgzMDUsInVzZXJfaWQiOjV9.WDKIwg2ydjl-bYLb9inGnhsB2eeNHIBWfmGeS3Q9RbM',
           },
@@ -98,9 +98,10 @@ class NoteService {
 
   Future<void> fetchFromServer() async {
     final response = await http.get(
-      Uri.parse('http://localhost:8080/notes'),
+      Uri.parse('http://192.168.43.5:8080/notes'),
       headers: {
         'Content-Type': 'application/json',
+        // TODO just test replace with your actual JWT token
         'Authorization':
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE5NTgzMDUsInVzZXJfaWQiOjV9.WDKIwg2ydjl-bYLb9inGnhsB2eeNHIBWfmGeS3Q9RbM',
       },
