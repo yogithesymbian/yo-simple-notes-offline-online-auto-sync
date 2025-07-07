@@ -134,3 +134,5 @@ dependencies:
 - [ ] Undo delete
 - [ ] Search and filter notes
 - [ ] prevent duplicate on refetchFromServer
+
+![WhatsApp Image 2025-07-07 at 2 26 29 PM](https://github.com/user-attachments/assets/3ee5b12b-5ee1-4070-ba3f-8bc9d988df83)
