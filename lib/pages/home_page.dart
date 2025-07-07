@@ -18,6 +18,13 @@ class HomePage extends StatelessWidget {
         title: const Text("Notes Offline/Online"),
         actions: [
           IconButton(
+            icon: const Icon(Icons.delete_sweep),
+            tooltip: 'Clear All Local Notes',
+            onPressed: () {
+              context.read<NoteBloc>().add(ClearAllNotes());
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.sync),
             tooltip: 'Sync Now',
             onPressed: () {

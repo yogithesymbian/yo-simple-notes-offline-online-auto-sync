@@ -19,6 +19,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
     on<AddNote>(_onAddNote);
     on<DeleteNote>(_onDeleteNote);
     on<SyncNotes>(_onSyncNotes);
+    on<ClearAllNotes>(_onClearAllNotes);
     on<MarkNoteDone>(_onMarkNoteDone);
 
     // Listen to connectivity changes to auto-sync
@@ -29,12 +30,27 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
       }
     });
   }
+
+  Future<void> _onClearAllNotes(
+      ClearAllNotes event, Emitter<NoteState> emit) async {
+    await noteService.clearLocalNotes();
+    emit(const NoteLoaded([]));
+  }
+
   Future<void> _onLoadNotes(LoadNotes event, Emitter<NoteState> emit) async {
     emit(NoteLoading());
     try {
-      if ((await connectivity.checkConnectivity()) != ConnectivityResult.none) {
-        await noteService.fetchFromServer();
+      final connected =
+          await connectivity.checkConnectivity() != ConnectivityResult.none;
+
+      if (connected) {
+        try {
+          await noteService.fetchFromServer(); // Optional & bisa gagal
+        } catch (e) {
+          print("⚠️ fetchFromServer failed, fallback to local only: $e");
+        }
       }
+
       final localNotes = await noteService.getLocalNotes();
       emit(NoteLoaded(localNotes));
     } catch (e, st) {
