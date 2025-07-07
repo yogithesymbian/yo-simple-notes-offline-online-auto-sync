@@ -131,5 +131,4 @@ dependencies:
 - [ ] Form to add/edit notes
 - [ ] Undo delete
 - [ ] Search and filter notes
-
-Happy coding! 🚀
+- [ ] prevent duplicate on refetchFromServer
