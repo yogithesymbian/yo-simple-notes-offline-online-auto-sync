@@ -7,6 +7,8 @@ This Flutter project demonstrates a **note-taking app** with **offline-first** s
 - REST API (built with Golang + JWT) for remote syncing
 - `flutter_offline` for detecting network connectivity
 
+Aplikasi ini menggunakan Flutter sebagai UI framework utama dan BLoC untuk manajemen state. Untuk deteksi koneksi jaringan, digunakan plugin connectivity_plus dan untuk mendukung mode offline, digunakan SQLite melalui paket sqflite. Data dicatat secara lokal, kemudian disinkronisasi ke server REST API berbasis Golang ~(Gin)~ dengan autentikasi JWT dan penyimpanan data menggunakan MySQL. Aplikasi ini mendukung sinkronisasi otomatis maupun manual saat perangkat kembali online.
+
 ---
 
 ## 🚀 Getting Started
