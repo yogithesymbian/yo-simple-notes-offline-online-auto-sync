@@ -73,8 +73,12 @@ class HomePage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       final note = Note(
-                          title: titleController.text,
-                          content: contentController.text);
+                        title: titleController.text,
+                        content: contentController.text,
+                        createdAt: DateTime.now()
+                            .toUtc()
+                            .toIso8601String(), // << ini ditambah
+                      );
                       context.read<NoteBloc>().add(AddNote(note));
                       titleController.clear();
                       contentController.clear();
@@ -94,6 +98,8 @@ class HomePage extends StatelessWidget {
                       itemCount: state.notes.length,
                       itemBuilder: (context, index) {
                         final note = state.notes[index];
+                        print("[on ui/ux] ${note.toJson()}");
+
                         return ListTile(
                           title: Text(note.title),
                           subtitle: Text(note.content),
