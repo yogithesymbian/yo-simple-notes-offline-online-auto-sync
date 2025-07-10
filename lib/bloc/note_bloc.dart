@@ -78,7 +78,7 @@ class NoteBloc extends Bloc<NoteEvent, NoteState> {
   Future<void> _onMarkNoteDone(
       MarkNoteDone event, Emitter<NoteState> emit) async {
     await noteService.updateNoteMarkDone(event.note);
-    // add(LoadNotes());
+    add(LoadNotes());
     if ((await connectivity.checkConnectivity()) != ConnectivityResult.none) {
       add(SyncNotes());
     }
