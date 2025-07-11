@@ -1,4 +1,5 @@
-![yo-offline-first drawio](https://github.com/user-attachments/assets/9c5b3fbc-32be-446d-9f0b-f949c0f12c1d)
+
+![yo-offline-first-embed drawio](https://github.com/user-attachments/assets/286bd25e-9f9b-426b-b444-1011951a742a)
 
 # Flutter Notes Sync (Offline/Online with BLoC)
 
