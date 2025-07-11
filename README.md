@@ -1,3 +1,5 @@
+![yo-offline-first drawio](https://github.com/user-attachments/assets/9c5b3fbc-32be-446d-9f0b-f949c0f12c1d)
+
 # Flutter Notes Sync (Offline/Online with BLoC)
 
 This Flutter project demonstrates a **note-taking app** with **offline-first** support using:
